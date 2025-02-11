@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Clock with AM/PM</title>
+    <style>
+        /* Background Animation */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ff7eb3, #ff758c, #ff7eb3, #ff758c);
+            background-size: 400% 400%;
+            animation: gradientBG 8s ease infinite;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Clock Styling */
+        .clock {
+            font-size: 70px;
+            font-weight: bold;
+            padding: 20px 40px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 4px;
+            transition: transform 0.3s;
+        }
+
+        .clock:hover {
+            transform: scale(1.05);
+        }
+
+        /* Date Styling */
+        .date {
+            font-size: 24px;
+            margin-top: 15px;
+            color: #fff;
+            opacity: 0.8;
+            text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dropdown Styling */
+        .timezone-selector {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Select a Time Zone</h2>
+    <select id="timezone" class="timezone-selector">
+        <option value="UTC">UTC (Universal Time)</option>
+        <option value="America/New_York">New York (USA)</option>
+        <option value="America/Los_Angeles">Los Angeles (USA)</option>
+        <option value="Europe/London">London (UK)</option>
+        <option value="Europe/Paris">Paris (France)</option>
+        <option value="Asia/Dubai">Dubai (UAE)</option>
+        <option value="Asia/Kolkata">India (IST)</option>
+        <option value="Asia/Tokyo">Tokyo (Japan)</option>
+        <option value="Australia/Sydney">Sydney (Australia)</option>
+    </select>
+
+    <div class="clock" id="clock">00:00:00 AM</div>
+    <div class="date" id="date">Monday, 01 January 2025</div>
+
+    <script>
+        function updateClock() {
+            let timezone = document.getElementById("timezone").value;
+            let now = new Date(new Date().toLocaleString("en-US", { timeZone: timezone }));
+
+            let hours = now.getHours();
+            let minutes = now.getMinutes().toString().padStart(2, '0');
+            let seconds = now.getSeconds().toString().padStart(2, '0');
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert 24h to 12h format
+
+            document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+            document.getElementById('date').innerText = now.toLocaleDateString('en-US', options);
+        }
+
+        document.getElementById("timezone").addEventListener("change", updateClock);
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
+    </script>
+</body>
+</html>
